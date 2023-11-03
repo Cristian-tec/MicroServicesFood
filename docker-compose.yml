@@ -1,0 +1,40 @@
+version: '3'
+
+services: 
+  postgres:
+    container_name: postgres_db
+    image: postgres:12-alpine
+    restart: always
+    ports:
+      - "5400:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=food
+
+
+  back:
+    container_name: back_food
+    restart: always
+    build: ./api
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - DB_USER=postgres
+      - DB_PASSWORD=123456
+      - DB_HOST=172.17.0.1
+      - DB_NAME=food
+      - DB_PORT=5400
+      - API_KEY=dcea45dee6ed4f50834f13a52413b043
+
+  front:
+    container_name: front_food
+    restart: always
+    build: ./client
+    ports:
+      - "3005:3000"
+    environment:
+      - PORT=3000
+      - BASE_URL=http://localhost
+
